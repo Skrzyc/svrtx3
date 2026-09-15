@@ -11,6 +11,7 @@
    sodipodi:docname="favicon.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
@@ -25,13 +26,13 @@
      showgrid="false"
      units="px"
      width="264px"
-     inkscape:zoom="1.3416246"
-     inkscape:cx="103.97842"
-     inkscape:cy="68.946262"
+     inkscape:zoom="0.47433593"
+     inkscape:cx="516.51158"
+     inkscape:cy="-262.47221"
      inkscape:window-width="1920"
-     inkscape:window-height="1001"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -40,13 +41,36 @@
      inkscape:label="Warstwa 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:#ff0066;fill-rule:evenodd;stroke-width:0.0758976;stroke-linecap:round;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000"
-       id="rect846"
-       width="69.849998"
-       height="69.849998"
-       x="7.6293946e-07"
-       y="7.6293946e-07"
-       ry="15.436933" />
+    <g
+       id="g2536">
+      <rect
+         style="fill:#222034;fill-rule:evenodd;stroke-width:0.0758976;stroke-linecap:round;-inkscape-stroke:none;paint-order:markers fill stroke;stop-color:#000000;fill-opacity:1"
+         id="rect846"
+         width="69.849998"
+         height="69.849998"
+         x="7.6293946e-07"
+         y="7.6293946e-07"
+         ry="15.436933" />
+      <image
+         width="45.890339"
+         height="45.890339"
+         preserveAspectRatio="none"
+         style="image-rendering:optimizeQuality"
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAACHElEQVR42u3ZsUoDQRDG8Su1kRQK
+YqeoEMFOhAjBRqy0sbUQC7GzEJ/A0tIXsLNKoeBL2FkIYivxOU5v4RMcMtm7eHsH5j/wgbs3e8VP
+JisxyyiKKlEfd2d5kVT9gAL6N8jB6XJI2XPqBxbQtHW+M58XEZBydHwbMnh8CflZmz6dRxLQZmC3
++ye/Iki7DySg7dTC4lpexAIqeo4UoO2Cfv8YMmZNAdoi6M3hUoi3RgrQZuut18+LdGdmQ96veyGC
+1FrP1Y8coM1APnc3QzxYXUpeP5KApoV8WN0IGQE1EnJMP6CAJoC0sVBV+wEFtF5I7VfN1MICWnPF
+APRnkmL3Y33eewEFtFyVhawKGoMFFNBqoB7M61MWsr++EqI+b63+GCyggE428vpaThAWquxa5/W+
+qf0MBTQxaFVIO/KAApoWVMmHByGC89b2HKCANgMag7SXEaCAtjPysQAKaFpQD0Yj7Y268nmxFWJ/
+EYACWu/ID+8vQ+xlYwHtc4HqPJ+hgNYLKggP1MJ6+/Y9gAJaD+jeXCckNtqxS0v7eh+ggNYDmxo0
+m5YCNDGoha16KQEKKKCAAtqJXjZcSoC2C3q12wsRlH1u4dUPKKDNgioeqO0DFNBmQT0gezkBCmi7
+I29htGbkAW3nC2cL5J3zRn5qIQFNDOqBxUC11r+TAQW0maoKSgHabOmymfQ5BSiggAIKKKCAAgoo
+oIBS1D+vL5qlVIqVRqzTAAAAAElFTkSuQmCC
+"
+         id="image2417"
+         x="11.979831"
+         y="11.979831" />
+    </g>
   </g>
 </svg>

@@ -24,22 +24,29 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "NewRocker";
+  src: url("./fonts/NewRocker/NewRocker-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-text: #333333;
   --color-text-h: hsl(257, 37%, 4%);
-  --color-bg: #fff;
-  --color-bg2: #f4f3ec;
-  --color-bg3: rgba(244, 243, 236, 0.5);
-  --color-border: #e5e4e7;
   --color-accent: #ff3b6c;
   --color-accent-bg: rgba(255, 59, 144, 0.3);
   --color-accent-border: rgba(255, 59, 144, 0.5);
+  --color-accent2: #ff3333;
+  --color-accent3: #ffcc22;
   --shadow-DEFAULT:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --font-heading: Anta, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-fancy: NewRocker, Anta, "Segoe UI", Roboto, sans-serif;
   --font-base: Montserrat, system-ui, "Segoe UI", Roboto, sans-serif;
   --font-details: "Jura", ui-monospace, Consolas, monospace;
 }
@@ -57,9 +64,10 @@
 }
 
 #root {
-  width: 1126px;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 0 0;
+  padding: 0;
+  border: none;
   text-align: center;
   border-inline: 1px solid var(--border);
   min-height: 100svh;
@@ -69,8 +77,62 @@
 
   color: var(--text);
   background: var(--bg);
+
+  /* custom cursor  */
+  cursor:
+    url("/src/assets/Avocado.png") 32 32,
+    auto;
+}
+
+.fancyCursor:hover {
+  cursor:
+    url("/src/assets/Avocado.png") 32 32,
+    auto;
 }
 
 body {
-  @apply m-0;
+  @apply m-0 p-0 border-0;
+}
+
+.hugeHeading {
+  @apply font-fancy text-4xl sm:text-7xl text-accent [text-shadow:6px_6px_4px_rgb(0_0_0)];
+}
+
+.bigHeading {
+  @apply font-fancy text-2xl sm:text-4xl text-accent [text-shadow:6px_6px_4px_rgb(0_0_0)];
+}
+
+.largeHeading {
+  @apply font-fancy text-xl sm:text-2xl text-accent [text-shadow:6px_6px_4px_rgb(0_0_0)];
+}
+
+.nightSkyBackground {
+  @apply bg-[url('/src/assets/night-sky.png')] bg-center bg-no-repeat bg-cover;
+}
+
+/* PULSE ANIMATION */
+
+@keyframes pulseScale {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.pulseScale {
+  animation: pulseScale 1.5s ease-in-out infinite;
+}
+
+/* LOADING BAR ANIMATION */
+
+@keyframes loadingBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
 }

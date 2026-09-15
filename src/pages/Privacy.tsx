@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import { settings } from "../global/settings";
 
 export default function Privacy() {
   useEffect(() => {
-    document.title = "Privacy Policy";
+    document.title = `${settings.gameNameShort} | Privacy`;
   }, []);
 
   return (
