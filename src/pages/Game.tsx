@@ -1,22 +1,16 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { FadeOutOverlay } from "../comps/FadeOutOverlay";
+import { HealthPoints } from "../comps/HealthPoints";
+import { Score } from "../comps/Score";
 import { EventNames } from "../game/EventNames";
-import { GameCanvas } from "../game/GameCanvas";
-import type { LevelConfig } from "../game/LevelConfig";
+import { gameObject } from "../game/GameObject";
 import type { GameState } from "../game/types/GameState";
+import type { LevelConfig } from "../game/types/LevelConfig";
 import { settings } from "../global/settings";
 import { StorageKeys } from "../global/storageKeys";
 import logger from "../utils/logger";
 import { delayMs } from "../utils/utils";
-
-// dispatch event like this
-//
-// window.dispatchEvent(
-//   new CustomEvent('EventNames.addScore', {
-//     detail: { pts: 10 },
-//   })
-// );
-//
 
 /**
  * - Displays GameCanvas
@@ -24,72 +18,101 @@ import { delayMs } from "../utils/utils";
  */
 export function Game() {
   const location = useLocation();
-  const config = location.state as LevelConfig;
+  const { levelConfig: config } = location.state as {
+    levelConfig: LevelConfig;
+  };
 
-  console.log(config);
+  // const [paused, setPaused] = useState<boolean>(false);
+  const [initRequested, setInitRequested] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [gameState, setGameState] = useState<GameState>({
     hp: config.heroHp,
     score: 0,
   });
-  console.log(gameState);
 
   const setGameOver = async () => {
     logger.log(`GAME OVER`);
-    await delayMs(1000);
+
     const personalBest = localStorage.getItem(StorageKeys.bestScore) ?? "0";
     if (parseInt(personalBest) < gameState.score) {
       logger.log(`New Best Score established`);
       localStorage.setItem(StorageKeys.bestScore, `${gameState.score}`);
     }
+
+    await delayMs(1000);
     setIsGameOver(true);
   };
 
   useEffect(() => {
     document.title = `${settings.gameNameShort} | Play`;
-  }, []);
+
+    // init game - paused on start
+
+    (async () => {
+      if (initRequested) return;
+      setInitRequested(true);
+      // await initialization - make sure the container mounted
+      await delayMs(50);
+      await gameObject.init();
+
+      // delay the start
+      await delayMs(150);
+      gameObject.start();
+    })();
+  });
 
   // update game state
   useEffect(() => {
-    const handleAddScore = (e: Event) => {
+    const handleUpdateScore = (e: Event) => {
       const { pts } = (e as CustomEvent).detail;
       logger.log(`handleAddScore - add points : ${pts}`);
       setGameState((prev) => ({ ...prev, score: prev.score + pts }));
     };
 
-    const handleMinusOneHp = () => {
-      logger.log(`handleMinusOneHp - currentHp : ${gameState.hp - 1}`);
-      const gameLost = gameState.hp === 1;
-      setGameState((prev) => ({ ...prev, hp: prev.hp - 1 }));
+    const handleUpdateHp = (e: Event) => {
+      const { hp } = (e as CustomEvent).detail;
+      logger.log(`handleMinusOneHp - currentHp : ${hp}`);
+      const gameLost = gameState.hp <= 0;
+      setGameState((prev) => ({ ...prev, hp: hp }));
 
       if (gameLost) setGameOver();
     };
 
-    window.addEventListener(EventNames.minusOneHp, handleMinusOneHp);
-    window.addEventListener(EventNames.addScore, handleAddScore);
+    window.addEventListener(EventNames.updateHp, handleUpdateHp);
+    window.addEventListener(EventNames.updateScore, handleUpdateScore);
     return () => {
-      window.removeEventListener(EventNames.minusOneHp, handleMinusOneHp);
-      window.removeEventListener(EventNames.addScore, handleAddScore);
+      window.removeEventListener(EventNames.updateHp, handleUpdateHp);
+      window.removeEventListener(EventNames.updateScore, handleUpdateScore);
     };
   });
 
   if (isGameOver) {
     return (
-      <div className="w-full min-h-screen flex flex-col bg-black justify-center items-center">
+      // GAME OVER SCREEN
+      <div className="w-full min-h-screen flex flex-col gap-2 bg-black justify-center items-center">
         <p className="hugeHeading"> GAME OVER </p>
+        <p className="bigHeading"> {gameState.score} </p>
       </div>
     );
   }
 
   return (
-    <div className="w-full min-h-screen relative ">
-      <div className="absolute z-50 top-0 left-0 flex justify-center items-center p-4">
-        <p> hp </p>
-      </div>
-      <GameCanvas />
-      <div className="absolute z-50 top-0 left-0 justify-center items-center p-4">
-        <p> points </p>
-      </div>
+    <div className="w-full min-h-screen relative overflow-hidden nightSkyBackground">
+      {/* black disappearing overlay */}
+      <FadeOutOverlay />
+
+      {/* pixi container  */}
+      <div id="pixi-container" className="z-10 w-full min-h-screen" />
+
+      {/* hp points - hud element */}
+      <HealthPoints hpCount={gameState.hp} />
+
+      {/* score - hud element */}
+      <Score score={gameState.score} />
+
+      {/* pause button */}
+
+      {/* pause overlay */}
     </div>
   );
 }

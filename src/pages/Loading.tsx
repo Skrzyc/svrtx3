@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { HeroPreview } from "../comps/HeroPreview";
+import { gameObject } from "../game/GameObject";
+import type { LevelConfig } from "../game/types/LevelConfig";
 import type { LevelName } from "../game/types/LevelName";
 import { AppRoutes } from "../global/AppRoutes";
 import { UrlParams } from "../global/paramKeys";
@@ -8,6 +10,11 @@ import { settings } from "../global/settings";
 import logger from "../utils/logger";
 
 const loadingDurationMs = 2000;
+
+const setupAndPreload = (levelConfig: LevelConfig) => {
+  gameObject.setup(levelConfig);
+  gameObject.preload();
+};
 
 export function Loading() {
   const params = new URLSearchParams(window.location.search);
@@ -30,6 +37,10 @@ export function Loading() {
 
   const levelConfig = settings.gameModes[(gameMode ?? "easy") as LevelName];
   const { note } = levelConfig;
+
+  useEffect(() => {
+    setupAndPreload(levelConfig);
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {

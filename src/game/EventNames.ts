@@ -1,5 +1,6 @@
 export const EventNames = {
-  minusOneHp: "minusOneHp",
+  updateHp: "updateHp",
+  updateScore: "updateScore",
   // gameOver: 'gameOver',
-  addScore: "addScore",
+  // pause: "pause",
 } as const;

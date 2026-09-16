@@ -1,0 +1,396 @@
+{
+    "frames": {
+        "hero_idle_1.png": {
+            "frame": {
+                "x": 1,
+                "y": 1,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_idle_2.png": {
+            "frame": {
+                "x": 87,
+                "y": 1,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_idle_3.png": {
+            "frame": {
+                "x": 173,
+                "y": 1,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_idle_4.png": {
+            "frame": {
+                "x": 259,
+                "y": 1,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_run_left_1.png": {
+            "frame": {
+                "x": 1,
+                "y": 87,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_run_left_2.png": {
+            "frame": {
+                "x": 87,
+                "y": 87,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_run_left_3.png": {
+            "frame": {
+                "x": 173,
+                "y": 87,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_run_left_4.png": {
+            "frame": {
+                "x": 259,
+                "y": 87,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_run_left_5.png": {
+            "frame": {
+                "x": 1,
+                "y": 173,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_run_left_6.png": {
+            "frame": {
+                "x": 87,
+                "y": 173,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_down_1.png": {
+            "frame": {
+                "x": 173,
+                "y": 173,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_down_2.png": {
+            "frame": {
+                "x": 259,
+                "y": 173,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_down_3.png": {
+            "frame": {
+                "x": 1,
+                "y": 259,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_left_1.png": {
+            "frame": {
+                "x": 87,
+                "y": 259,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_left_2.png": {
+            "frame": {
+                "x": 173,
+                "y": 259,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_left_3.png": {
+            "frame": {
+                "x": 259,
+                "y": 259,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_up_1.png": {
+            "frame": {
+                "x": 345,
+                "y": 1,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_up_2.png": {
+            "frame": {
+                "x": 345,
+                "y": 87,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        },
+        "hero_slice_up_3.png": {
+            "frame": {
+                "x": 345,
+                "y": 173,
+                "w": 84,
+                "h": 84
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 84,
+                "h": 84
+            },
+            "sourceSize": {
+                "w": 84,
+                "h": 84
+            }
+        }
+    },
+    "meta": {
+        "app": "https://www.codeandweb.com/texturepacker",
+        "version": "1.0",
+        "image": "spritesheet.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 430,
+            "h": 344
+        },
+        "scale": "1",
+        "comment": "Created with TexturePacker Online (free version)\nhttps://www.codeandweb.com/texturepacker-online\n\nTexturePacker desktop offers better support for Pixi and Phaser with sprite trimming, better packing algorithms, hardware texture compression, and PNG optimization.\nTry TexturePacker desktop: https://www.codeandweb.com/texturepacker"
+    }
+}

@@ -49,8 +49,20 @@ features :
 - [ ] - some graphics links
 - [ ] - og-image
 - [ ] - privacy policy page
-- [ ] - loading page
-- [ ] - startFromGame
+
+**game**
+
+- sound system
+- key events
+- game logic
+- resize handler
+
+**sounds**
+
+- [ ] - hp loss
+- [ ] - collect
+- [ ] - game over
+- [ ] - btn click
 
 ## Development ideas
 
@@ -62,15 +74,16 @@ features :
 
 2. Game
 
+- parallax/animated background
 - random bombs - which takes player hp if u catch/near - (hazard)
 - blocks u need to jump over - (hazard)
 - something like ghost/bats/birds that takes the collectable and translate it on x-axis (hindrance)
 - wind logic - (hindrance)
 - special collectables - with buffs (eg. points multiplier, slow time , etc) - (buff)
-
-- Better assets
+- Better quality assets
 
 3. Performance
 
 - home animation on keyframes - plain css
 - pack all assets on spritesheets
+- spritesheet whitelist filtering loading - (load sprites from spritesheets only the ones u need - not all of them)
