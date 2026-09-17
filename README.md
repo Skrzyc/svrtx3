@@ -56,6 +56,7 @@ features :
 - key events
 - game logic
 - resize handler
+- floor asset
 
 **sounds**
 
@@ -63,6 +64,11 @@ features :
 - [ ] - collect
 - [ ] - game over
 - [ ] - btn click
+- [ ] - slice sound
+
+## BUGS
+
+- [ ] - fix GameScene.reset() (try again)/(back -> play) - cause error
 
 ## Development ideas
 
@@ -87,3 +93,8 @@ features :
 - home animation on keyframes - plain css
 - pack all assets on spritesheets
 - spritesheet whitelist filtering loading - (load sprites from spritesheets only the ones u need - not all of them)
+
+4. Code/Project Structure
+
+- more tests
+- isolate large chunks of code for easier testing (e.g GameScene)

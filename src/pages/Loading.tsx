@@ -1,27 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { HeroPreview } from "../comps/HeroPreview";
 import { gameObject } from "../game/GameObject";
-import type { LevelConfig } from "../game/types/LevelConfig";
 import type { LevelName } from "../game/types/LevelName";
 import { AppRoutes } from "../global/AppRoutes";
 import { UrlParams } from "../global/paramKeys";
 import { settings } from "../global/settings";
 import logger from "../utils/logger";
+import { delayMs } from "../utils/utils";
 
 const loadingDurationMs = 2000;
 
-const setupAndPreload = (levelConfig: LevelConfig) => {
-  gameObject.setup(levelConfig);
-  gameObject.preload();
-};
-
+/**
+ * Loading screen
+ *
+ * @todo
+ * - satisfy 2 conditions before navigating to game 1. 2000ms delay 2. await gamePreload()
+ *
+ */
 export function Loading() {
   const params = new URLSearchParams(window.location.search);
   const gameMode = params.get(UrlParams.gameMode);
   const navigate = useNavigate();
 
   const [isDone, setIsDone] = useState<boolean>(false);
+  const preloadStarted = useRef(false);
 
   useEffect(() => {
     document.title = `${settings.gameNameShort} | Loading...`;
@@ -39,8 +42,28 @@ export function Loading() {
   const { note } = levelConfig;
 
   useEffect(() => {
-    setupAndPreload(levelConfig);
-  });
+    if (preloadStarted.current) return;
+    preloadStarted.current = true;
+
+    let cancelled = false;
+
+    (async () => {
+      await Promise.all([
+        delayMs(loadingDurationMs),
+        (async () => {
+          gameObject.setup(levelConfig);
+          await gameObject.preload();
+        })(),
+      ]);
+
+      if (cancelled) return;
+      setIsDone(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [levelConfig]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -54,11 +77,13 @@ export function Loading() {
   useEffect(() => {
     if (!isDone) return;
     const timer = setTimeout(() => {
-      navigate(AppRoutes.game, { state: { levelConfig } });
+      navigate(AppRoutes.game, {
+        state: { config: levelConfig, mode: gameMode as LevelName },
+      });
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [isDone, navigate, levelConfig]);
+  }, [isDone, navigate, levelConfig, gameMode]);
 
   return (
     <div className="w-full min-h-screen nightSkyBackground flex flex-col items-center justify-center p-4 sm:p-6 select-none">

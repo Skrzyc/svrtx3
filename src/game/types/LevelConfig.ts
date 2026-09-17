@@ -5,6 +5,7 @@ export type LevelConfig = {
   note: string;
   baseFallSpeed: number;
   heroHp: number;
+  // fruit assets
   assets: string[];
   // optional
   pointsMultiplier?: number;

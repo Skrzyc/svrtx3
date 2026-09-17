@@ -6,6 +6,7 @@ import { Level4Config } from "../game/config/Level4Config";
 export const settings = {
   gameName: "Knightmare Snacks",
   gameNameShort: "KS",
+  showGameOverScreenAfterMs: 1000,
   displayDevModeTagInDev: true,
   gameModes: {
     easy: Level1Config,

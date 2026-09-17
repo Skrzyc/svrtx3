@@ -110,6 +110,14 @@ body {
   @apply [text-shadow:4px_4px_2px_rgb(0_0_0)];
 }
 
+.blackTextShadowBase {
+  @apply [text-shadow:2px_2px_1px_rgb(0_0_0)];
+}
+
+.blackTextShadowSmall {
+  @apply [text-shadow:1px_1px_1px_rgb(0_0_0)];
+}
+
 .nightSkyBackground {
   @apply bg-[url('/src/assets/night-sky.png')] bg-center bg-no-repeat bg-cover;
 }

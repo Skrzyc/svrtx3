@@ -13,6 +13,7 @@
     "------ BUILD ------": "",
     "build": "tsc -b && vite build && node tools/postBuild.js",
     "preview": "vite preview",
+    "build-preview": "tsc -v && vite build && node tools/postBuild.js && vite preview",
     "------ DEPLOY ------": "",
     "deploy": "python tools/deploy.py",
     "------ VERSION ------": "",
