@@ -1,7 +1,7 @@
 import type { LevelConfig } from "../types/LevelConfig";
 
 const Level2Config: LevelConfig = {
-  baseFallSpeed: 1.3,
+  baseFallSpeed: 2.3,
   note: "should be balanced",
   pointsMultiplier: 2,
   backgroundAccent: 0x113333,
@@ -19,7 +19,7 @@ const Level2Config: LevelConfig = {
     "Bread",
     "Eggplant",
     "PepperRed",
-    "PepperGree",
+    "PepperGreen",
     "Grubs",
     "Grub",
   ],

@@ -1,7 +1,7 @@
 import type { LevelConfig } from "../types/LevelConfig";
 
 const Level1Config: LevelConfig = {
-  baseFallSpeed: 1,
+  baseFallSpeed: 1.8,
   note: "so easy",
   assets: [
     "Cookie",

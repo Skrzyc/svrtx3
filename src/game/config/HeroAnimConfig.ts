@@ -5,15 +5,6 @@ export type AnimConfig = {
   flipX?: true;
 };
 
-// export type AnimKey =
-//   | "idle"
-//   | "moveLeft"
-//   | "moveRight"
-//   | "sliceLeft"
-//   | "sliceRight"
-//   | "sliceUp"
-//   | "sliceDown";
-
 const HeroAnimConfig: { [key: string]: AnimConfig } = {
   idle: {
     frameCount: 4,

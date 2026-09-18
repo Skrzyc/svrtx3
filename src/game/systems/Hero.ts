@@ -193,7 +193,8 @@ export class Hero {
     if (heroMove === "idle") return;
 
     const direction = heroMove === "left" ? -1 : 1;
-    const distance = GameUtils.calcDistance(this.config.heroSpeed, delta);
+    const speed = this.scene.globalScale * this.config.heroSpeed;
+    const distance = GameUtils.calcDistance(speed, delta);
 
     const finalPosition = this.sprite.x + distance * direction;
 

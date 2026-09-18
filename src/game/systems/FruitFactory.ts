@@ -10,9 +10,10 @@ import { GameUtils } from "./GameUtils";
  *
  * @todo
  * - reset rotation on - backToPool - no need i guess
+ * - add random spawn msOffset to frequency of spawning fruits
  */
 export class FruitFactory {
-  readonly spawnEveryNMs = 1500;
+  readonly spawnEveryNMs = 900;
   readonly spawnXOffset = 100;
   readonly rotSpeed = 45; // degrees per second
 
@@ -127,8 +128,9 @@ export class FruitFactory {
   private updateExistingFruits(delta: number) {
     const { top, bottom } = this.scene.getBounds();
     const { speedMultiplier: speedMul, fallSpeed } = this;
+    const { globalScale: gS } = this.scene;
 
-    const dist = GameUtils.calcDistance(fallSpeed * speedMul, delta);
+    const dist = GameUtils.calcDistance(fallSpeed * speedMul * gS, delta);
     const angleDiff = (delta / 1000) * this.rotSpeed;
     const yThreshold = bottom - (bottom - top) * GameSettings.floorHeightPer;
 

@@ -2,6 +2,11 @@
 
 Simple web game with `pixi.js` - for recruitment purposes
 
+- developed from scratch
+- underdeveloped
+- unbalanced
+- with some bugs and issues
+
 ---
 
 - project deployed here : `https://mytestdomain.pl`
@@ -31,6 +36,7 @@ features :
 
 - `gameMode` - `easy/medium/hard/hell`
 - `startFromGame` - if `true` move directly to game
+- `audio` - `true`/`false` - default `true`
 
 ## SETUP
 
@@ -77,6 +83,7 @@ features :
 - [ ] - optimize for mobile - pause button - touch events
 - [ ] - hud elements on mobile devices to large (do not scale with screen width - use min())
 - [ ] - remove unused assets/fonts
+- [ ] - game should map pos to view
 
 ## Development ideas
 
