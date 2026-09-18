@@ -59,39 +59,14 @@ features :
 
 ## TODO
 
-**overall**
-
 - [ ] - readme better game description
-- [ ] - images
 - [ ] - unit tests
-
-**home**
-
-- [ ] - some graphics links
-- [ ] - og-image
 - [ ] - privacy policy page
-
-**game**
-
-- sound system
-- key events
-- game logic
-- resize handler
-- floor asset
-
-**sounds**
-
-- [ ] - hp loss
-- [ ] - collect
-- [ ] - game over
-- [ ] - btn click
-- [ ] - slice sound
 
 ## BUGS
 
 - [ ] - game elements(floor, hero) - resize method - fix
 - [ ] - fix scale
-- [ ] - optimize for mobile - pause button - touch events
 - [ ] - hud elements on mobile devices to large (do not scale with screen width - use min())
 - [ ] - remove unused assets/fonts
 - [ ] - game should map pos to view
