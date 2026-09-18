@@ -16,7 +16,7 @@ export function FadeOutOverlay({ duration = 1000 }: { duration?: number }) {
 
   return (
     <div
-      className="absolute top-0 left-0 min-h-screen w-full bg-black z-50"
+      className="absolute top-0 left-0 min-h-screen w-full bg-black z-95"
       style={{ animation: `fadeOut ${duration}ms ease-in-out forwards` }}
     />
   );

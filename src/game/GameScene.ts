@@ -17,6 +17,19 @@ import { InputManager } from "./systems/InputManager";
 import { Scheduler } from "./systems/Scheduler";
 import type { LevelConfig } from "./types/LevelConfig";
 
+import { Floor } from "./GameObjects.ts/Floor";
+import { EventHandler } from "./systems/EventHandler";
+import { SoundSystem } from "./systems/SoundSystem";
+import type { Side } from "./types/Side";
+import foodSheetPng from "/src/assets/atlas/food.png";
+import heroSheetPng from "/src/assets/atlas/hero.png";
+import floorPng from "/src/assets/floor.png";
+
+const pathToHeroJSON = new URL("../assets/atlas/hero.json", import.meta.url)
+  .href;
+const pathToFoodJSON = new URL("../assets/atlas/food.json", import.meta.url)
+  .href;
+
 const { showGameOverScreenAfterMs } = settings;
 
 /**
@@ -37,31 +50,41 @@ const { showGameOverScreenAfterMs } = settings;
  * @method play - unpause the game
  * @method destroy - destroy view
  *
- * @todo
- * - resize handler
- * - notifier - event emitter to hud - isolate new file class /systems
  */
 export default class GameScene {
-  readonly floorOffset = 50;
+  readonly floorOffset = 90;
   readonly containerName = "pixi-container";
   readonly defaultBackgroundAccent: ColorSource = 0x000;
 
   private app!: Application;
 
-  config!: LevelConfig;
+  private soundSystem = new SoundSystem();
 
+  config!: LevelConfig;
+  globalScale = 1;
+
+  // todo: disable this lint for entire file
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   foodSheet!: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   heroSheet!: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  floorTexture!: any;
 
   // containers
   mainContainer!: Container;
 
-  // hero
+  touchState = {
+    leftDown: false,
+    rightDown: false,
+  };
+
+  // game elements
   private hero = new Hero();
+  private floor = new Floor();
 
   // systems
+  private eventsHandler = new EventHandler();
   private inputManager = new InputManager();
   private fruitFactory = new FruitFactory();
   private scheduler = new Scheduler();
@@ -73,6 +96,7 @@ export default class GameScene {
     hpLeft: 10,
     score: 0,
     paused: true,
+    gameOver: false,
   };
 
   constructor() {}
@@ -86,7 +110,6 @@ export default class GameScene {
     this.state.setup = true;
   }
 
-  // load assets
   async preload() {
     if (this.state.preload) return;
     if (!this.state.setup) {
@@ -94,23 +117,25 @@ export default class GameScene {
     }
     logger.log("GameScene :: preload");
 
-    // const {} = this.config;
+    // load floor asset
+    this.floorTexture = await Assets.load(floorPng);
 
-    // maybe whitelist filtering - pixi supports ?
-    const loadSpriteSheet = async (key: string) => {
-      const sheetTexture = await Assets.load(`/src/assets/atlas/${key}.png`);
-      Assets.add({
-        alias: key,
-        src: `/src/assets/atlas/${key}.json`,
-        data: { texture: sheetTexture }, // using of preloaded texture
-      });
-      const sheet = await Assets.load(key);
+    // load food sprite sheet
+    this.foodSheet = await GameUtils.loadSpriteSheet(
+      AtlasKeys.food,
+      foodSheetPng,
+      pathToFoodJSON,
+    );
 
-      return sheet;
-    };
+    // load hero sprite sheet
+    this.heroSheet = await GameUtils.loadSpriteSheet(
+      AtlasKeys.hero,
+      heroSheetPng,
+      pathToHeroJSON,
+    );
 
-    this.foodSheet = await loadSpriteSheet(AtlasKeys.food);
-    this.heroSheet = await loadSpriteSheet(AtlasKeys.hero);
+    // load audio
+    this.soundSystem.init();
 
     this.state.preload = true;
   }
@@ -136,7 +161,10 @@ export default class GameScene {
       backgroundColor: backgroundAccent ?? this.defaultBackgroundAccent,
       backgroundAlpha: 0.2,
       autoStart: false,
+      // autoDensity: true,
     });
+
+    this.globalScale = GameUtils.getGlobalScale(width, height);
 
     logger.log(`GameSCene :: initialized dimensions ${width} x ${height}`);
 
@@ -146,6 +174,7 @@ export default class GameScene {
       throw Error(`cannot find html element with id - ${this.containerName}`);
     }
 
+    container.innerHTML = "";
     container.appendChild(app.canvas);
 
     // game containers
@@ -177,6 +206,8 @@ export default class GameScene {
     this.scheduler.start();
     this.inputManager.init(this);
     this.fruitFactory.init(this);
+    this.floor.init(this);
+    this.eventsHandler.init(this);
 
     // set up resize handler
     window.addEventListener("resize", this.handleResize);
@@ -187,61 +218,74 @@ export default class GameScene {
 
   pause() {
     logger.log("GameScene :: paused");
-    this.app.stop();
+    this.app?.stop();
   }
 
   play() {
     logger.log("GameScene :: play");
-    this.app.start();
+    this.app?.start();
   }
 
   update(delta: number) {
-    // if(this.state.paused) return;
-    // if pause do not update
-
-    // update systems
     this.scheduler.update(delta);
     this.fruitFactory.update(delta);
 
     // fruits collected ?
+    let overlapSide: Side | false = false;
     this.mainContainer.getChildrenByLabel("fruit").forEach((elem) => {
       const fruit = elem as Sprite;
       const { sprite } = this.hero;
-      const overlap = GameUtils.spritesOverlap(sprite, fruit);
+      const overlap = GameUtils.getOverlap(sprite, fruit);
       if (!overlap) return;
+      overlapSide = overlap;
 
       this.onFruitCollected();
       this.fruitFactory.onFruitDead(fruit);
     });
 
     // update hero
-    const [isLeft, isRight] = [
+    let [isLeft, isRight] = [
       this.inputManager.isLeftDown(),
       this.inputManager.isRightDown(),
     ];
-    this.hero.update(delta, isLeft, isRight);
+
+    // if anyKeyboardInputs -fall back to touchState -> not ideal solution (fix later)
+    const anyKeyboardInputs = isLeft || isRight;
+    if (!anyKeyboardInputs) {
+      [isLeft, isRight] = [this.touchState.leftDown, this.touchState.rightDown];
+    }
+
+    this.hero.update(delta, isLeft, isRight, overlapSide);
   }
 
-  onGameTogglePause() {
+  onGameTogglePause(noEmit?: true) {
     // check pause state
     const isPaused = this.state.paused;
+
     // pause/play
     this[isPaused ? "play" : "pause"]();
 
-    // emit to HUD
-    this.emitPauseToggle();
-
     // update state
     this.state.paused = !isPaused;
+
+    console.log("xd-1");
+    if (noEmit ?? false) return;
+    console.log("xd-2");
+
+    // emit to HUD
+    this.emitPauseToggle();
   }
 
   onHpLoss() {
-    this.emitUpdateHp(this.state.hpLeft - 1);
-    this.state.hpLeft -= 1;
+    if (this.state.gameOver || this.state.hpLeft <= 0) return;
 
-    const isGameOver = this.state.hpLeft === 0;
-    if (isGameOver) {
+    this.state.hpLeft -= 1;
+    this.emitUpdateHp(this.state.hpLeft);
+
+    if (this.state.hpLeft <= 0) {
+      this.state.gameOver = true;
       // play game over sound
+      this.soundSystem.playSfx("gameOverSound");
 
       // only pause the game
       this.pause();
@@ -250,19 +294,20 @@ export default class GameScene {
       this.inputManager.destroy();
 
       // (delay the game over emit & scene destroy)
-      //  not via scheduler because game wiil be paused
+      // not via scheduler because game wiil be paused - so scheduler will not be running
       delayMs(showGameOverScreenAfterMs).then(() => {
-        this.destroy();
-        this.emitGameOver();
+        if (this.state.gameOver) {
+          this.destroy();
+          this.emitGameOver();
+        }
       });
     } else {
-      // play hp loss sound
+      this.soundSystem.playSfx("hpLossSound");
     }
-    this.emitUpdateHp(this.state.hpLeft);
   }
 
   onFruitCollected() {
-    // play sound
+    this.soundSystem.playSfx("collectSound");
     this.state.score += Math.round(10 * (this.config.pointsMultiplier ?? 1));
     this.emitUpdateScore(this.state.score);
   }
@@ -290,8 +335,12 @@ export default class GameScene {
   }
 
   private handleResize = (): void => {
+    if (!this.app?.renderer || !this.mainContainer) return;
+
     const width = window.innerWidth;
     const height = window.innerHeight;
+
+    this.globalScale = GameUtils.getGlobalScale(width, height);
 
     // resize the actual renderer/canvas
     this.app.renderer.resize(width, height);
@@ -300,7 +349,9 @@ export default class GameScene {
     this.mainContainer.x = width / 2;
     this.mainContainer.y = height / 2;
 
-    this.hero.placeInBounds();
+    this.hero.resize();
+    this.floor.resize();
+    this.fruitFactory.resize();
 
     logger.log(`GameScene :: resized to ${width} x ${height}`);
   };
@@ -308,8 +359,18 @@ export default class GameScene {
   destroy() {
     logger.log("GameScene :: destroy");
 
-    // destroy app
-    this.app.destroy({ removeView: true }, true);
+    // destroy app safely without destroying shared asset textures
+    if (this.app) {
+      try {
+        this.app.destroy(
+          { removeView: true },
+          { children: true, texture: false, textureSource: false },
+        );
+      } catch (err) {
+        logger.warn(`GameScene :: app destroy error: ${err}`);
+      }
+      this.app = undefined as unknown as Application;
+    }
 
     // remove input events
     this.inputManager.destroy();
@@ -317,13 +378,12 @@ export default class GameScene {
     // remove resize handler
     window.removeEventListener("resize", this.handleResize);
 
-    // remove canvas element form pixi-container
-    // const container = document.getElementById(this.containerName);
-    // container?.removeChild(this.app.canvas);
+    // destroy the sound system
+    this.soundSystem.destroy();
 
-    // this.state.init = false;
-    // this.state.preload = false;
-    // this.state.setup = false;
+    this.eventsHandler.destroy();
+
+    this.state.init = false;
   }
 
   scheduleMethod(method: () => void, delayMs: number, id?: string) {
@@ -335,8 +395,8 @@ export default class GameScene {
   }
 
   getBounds(): { top: number; bottom: number; left: number; right: number } {
-    const halfWidth = this.app.screen.width / 2;
-    const halfHeight = this.app.screen.height / 2;
+    const halfWidth = (this.app?.screen?.width ?? window.innerWidth) / 2;
+    const halfHeight = (this.app?.screen?.height ?? window.innerHeight) / 2;
 
     return {
       top: -halfHeight,
@@ -347,12 +407,16 @@ export default class GameScene {
   }
 
   reset() {
+    logger.log("GameScene :: reset");
+
+    this.destroy();
+
     this.state.setup = false;
-    // skip preload (assets already exists in cache)
     this.state.init = false;
-    this.state.hpLeft = 10;
+    this.state.hpLeft = this.config?.heroHp ?? 10;
     this.state.score = 0;
     this.state.paused = true;
+    this.state.gameOver = false;
 
     this.hero = new Hero();
     this.inputManager = new InputManager();

@@ -1,11 +1,15 @@
 import { Sprite } from "pixi.js";
 import logger from "../../utils/logger";
+import { GameSettings } from "../config/gameSettings";
 import type GameScene from "../GameScene";
 import { GameUtils } from "./GameUtils";
 
 /**
  * Fruit Factory
  * - spawn & update existing fruits
+ *
+ * @todo
+ * - reset rotation on - backToPool - no need i guess
  */
 export class FruitFactory {
   readonly spawnEveryNMs = 1500;
@@ -19,12 +23,13 @@ export class FruitFactory {
 
   readonly startDelayMs = 500;
 
-  private _pool: Sprite[] = [];
+  // more like a queue
+  private pool: Sprite[] = [];
 
   private state = {
     started: false,
     lastSpawned: 0,
-    poolCount: 0,
+    totalCreated: 0,
   };
 
   constructor() {}
@@ -53,42 +58,43 @@ export class FruitFactory {
 
     assets.forEach((assetName) => {
       const sprite = this.createSprite(assetName);
-      this._pool.push(sprite);
+      this.pool.push(sprite);
     });
-    this.state.poolCount = assets.length;
+    this.state.totalCreated = assets.length;
   }
 
   private createSprite(assetName: string) {
-    const texture = this.scene.foodSheet.textures[`${assetName}.png`];
+    const { globalScale: gS, foodSheet } = this.scene;
+    const texture = foodSheet.textures[`${assetName}.png`];
     const sprite = new Sprite({
       texture: texture,
       label: `fruit`,
     });
     sprite.visible = false;
     sprite.anchor.set(0.5, 0.5);
-    sprite.scale.set(2, 2);
+    sprite.scale.set(2 * gS, 2 * gS);
     return sprite;
   }
 
   private getFromPool(): Sprite {
-    const sprite = this._pool.shift();
+    const sprite = this.pool.pop();
     if (sprite) return sprite;
 
     // on pool exhausted
     const { assets } = this.scene.config;
-    const newSpriteIdx = this.state.poolCount;
-    const newSprite = this.createSprite(assets[newSpriteIdx]);
-    this.state.poolCount += 1;
+    const newSpriteIdx = this.state.totalCreated;
+    const newSprite = this.createSprite(assets[newSpriteIdx % assets.length]);
+    this.state.totalCreated += 1;
 
     logger.log(
-      `FruitFactory :: pool exhausted - created new object - current total pool count: ${this.state.poolCount}`,
+      `FruitFactory :: pool exhausted - created new object - total created : ${this.state.totalCreated}`,
     );
 
     return newSprite;
   }
 
   private putBackToPool(sprite: Sprite) {
-    this._pool.push(sprite);
+    this.pool.unshift(sprite);
   }
 
   private spawnFruit() {
@@ -107,9 +113,7 @@ export class FruitFactory {
 
   onFruitDead(sprite: Sprite) {
     sprite.visible = false;
-
     this.scene.mainContainer.removeChild(sprite);
-
     this.putBackToPool(sprite);
   }
 
@@ -121,23 +125,29 @@ export class FruitFactory {
   }
 
   private updateExistingFruits(delta: number) {
-    const { bottom } = this.scene.getBounds();
+    const { top, bottom } = this.scene.getBounds();
     const { speedMultiplier: speedMul, fallSpeed } = this;
 
     const dist = GameUtils.calcDistance(fallSpeed * speedMul, delta);
     const angleDiff = (delta / 1000) * this.rotSpeed;
-    const yThreshold = bottom - this.scene.floorOffset;
+    const yThreshold = bottom - (bottom - top) * GameSettings.floorHeightPer;
 
+    const elementsToRemove: Sprite[] = [];
     this.scene.mainContainer.getChildrenByLabel("fruit").forEach((con) => {
       const fruit = con as Sprite;
       if (fruit.y >= yThreshold) {
-        this.onFruitDead(fruit);
-        this.scene.onHpLoss();
+        elementsToRemove.push(fruit);
         return;
       }
 
       fruit.y += dist;
       fruit.angle += angleDiff;
+    });
+
+    // remove elements
+    elementsToRemove.forEach((el) => {
+      this.onFruitDead(el);
+      this.scene.onHpLoss();
     });
   }
 
@@ -147,5 +157,20 @@ export class FruitFactory {
     if (time < this.state.lastSpawned + this.spawnEveryNMs) return;
     this.state.lastSpawned = time;
     this.spawnFruit();
+  }
+
+  resize() {
+    const newScale = this.scene.globalScale * 2;
+
+    // scale elements in pool
+    this.pool.forEach((el: Sprite) => {
+      el.scale.set(newScale, newScale);
+    });
+
+    // scale sprites in game
+    this.scene.mainContainer.getChildrenByLabel("fruit").forEach((con) => {
+      const fruit = con as Sprite;
+      fruit.scale.set(newScale, newScale);
+    });
   }
 }

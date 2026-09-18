@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
+import heroRunDown1AssetPath from "/src/assets/hero/hero_run_down_1.png";
+import heroRunDown2AssetPath from "/src/assets/hero/hero_run_down_2.png";
+import heroRunDown3AssetPath from "/src/assets/hero/hero_run_down_3.png";
+import heroRunDown4AssetPath from "/src/assets/hero/hero_run_down_4.png";
+import heroRunDown5AssetPath from "/src/assets/hero/hero_run_down_5.png";
 
 const animConfig = {
-  basePath: "src/assets/hero/hero_run_down_",
-  frameCount: 5,
   fps: 8,
-  padStart: 1,
+  frames: [
+    heroRunDown1AssetPath,
+    heroRunDown2AssetPath,
+    heroRunDown3AssetPath,
+    heroRunDown4AssetPath,
+    heroRunDown5AssetPath,
+  ],
 };
 
 const isDev = import.meta.env.DEV;
@@ -24,7 +33,7 @@ export function HeroPreview() {
     if (!isPlaying) return;
 
     const interval = setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % animConfig.frameCount);
+      setFrameIndex((prev) => (prev + 1) % animConfig.frames.length);
     }, 1000 / animConfig.fps);
 
     return () => clearInterval(interval);
@@ -36,7 +45,7 @@ export function HeroPreview() {
       className="w-auto h-auto fancyCursor"
     >
       <img
-        src={`${animConfig.basePath}${frameIndex + animConfig.padStart}.png`}
+        src={animConfig.frames[frameIndex]}
         alt="animation"
         className="h-16 sm:h-32 w-auto drop-shadow-[4px_10px_2px_rgba(0,0,0,1)]"
       />

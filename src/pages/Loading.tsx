@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import { HeroPreview } from "../comps/HeroPreview";
 import { gameObject } from "../game/GameObject";
 import type { LevelName } from "../game/types/LevelName";
@@ -13,77 +13,66 @@ const loadingDurationMs = 2000;
 
 /**
  * Loading screen
- *
- * @todo
- * - satisfy 2 conditions before navigating to game 1. 2000ms delay 2. await gamePreload()
- *
  */
 export function Loading() {
-  const params = new URLSearchParams(window.location.search);
-  const gameMode = params.get(UrlParams.gameMode);
+  const [searchParams] = useSearchParams();
+  const gameMode = searchParams.get(UrlParams.gameMode);
   const navigate = useNavigate();
 
-  const [isDone, setIsDone] = useState<boolean>(false);
-  const preloadStarted = useRef(false);
+  const [_isDone, setIsDone] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = `${settings.gameNameShort} | Loading...`;
   }, []);
 
+  const isValidMode =
+    !!gameMode && Object.keys(settings.gameModes).includes(gameMode);
+
   // on error redirect to -> error page
   useEffect(() => {
-    if (!gameMode || !Object.keys(settings.gameModes).includes(gameMode)) {
-      logger.error("Loading :: gameMode not specified");
+    if (!isValidMode) {
+      logger.error("Loading :: gameMode not specified or invalid");
       navigate(AppRoutes.error, { replace: true });
     }
-  }, [gameMode, navigate]);
+  }, [isValidMode, navigate]);
 
   const levelConfig = settings.gameModes[(gameMode ?? "easy") as LevelName];
   const { note } = levelConfig;
 
   useEffect(() => {
-    if (preloadStarted.current) return;
-    preloadStarted.current = true;
+    if (!isValidMode) return;
 
-    let cancelled = false;
+    let isMounted = true;
 
     (async () => {
-      await Promise.all([
-        delayMs(loadingDurationMs),
-        (async () => {
-          gameObject.setup(levelConfig);
-          await gameObject.preload();
-        })(),
-      ]);
+      try {
+        await Promise.all([
+          delayMs(loadingDurationMs),
+          (async () => {
+            gameObject.setup(levelConfig);
+            await gameObject.preload();
+          })(),
+        ]);
+      } catch (err) {
+        logger.error(`Loading :: preload error: ${err}`);
+      }
 
-      if (cancelled) return;
+      if (!isMounted) return;
       setIsDone(true);
+
+      // Brief transition delay before entering game
+      await delayMs(500);
+      if (!isMounted) return;
+
+      navigate(AppRoutes.game, {
+        state: { config: levelConfig, gameMode: gameMode as LevelName },
+      });
     })();
 
     return () => {
-      cancelled = true;
+      isMounted = false;
     };
-  }, [levelConfig]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsDone(true);
-    }, loadingDurationMs);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // redirect to game page - when done loading
-  useEffect(() => {
-    if (!isDone) return;
-    const timer = setTimeout(() => {
-      navigate(AppRoutes.game, {
-        state: { config: levelConfig, mode: gameMode as LevelName },
-      });
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [isDone, navigate, levelConfig, gameMode]);
+  }, [isValidMode, levelConfig, gameMode, navigate]);
 
   return (
     <div className="w-full min-h-screen nightSkyBackground flex flex-col items-center justify-center p-4 sm:p-6 select-none">

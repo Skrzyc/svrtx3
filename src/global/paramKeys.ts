@@ -4,4 +4,5 @@
 export const UrlParams = {
   gameMode: "gameMode",
   startFromGame: "startFromGame",
+  audio: "audio",
 };

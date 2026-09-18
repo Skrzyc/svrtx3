@@ -4,6 +4,10 @@ Simple web game with `pixi.js` - for recruitment purposes
 
 ---
 
+- project deployed here : `https://mytestdomain.pl`
+
+---
+
 features :
 
 **pages**
@@ -68,7 +72,11 @@ features :
 
 ## BUGS
 
-- [ ] - fix GameScene.reset() (try again)/(back -> play) - cause error
+- [ ] - game elements(floor, hero) - resize method - fix
+- [ ] - fix scale
+- [ ] - optimize for mobile - pause button - touch events
+- [ ] - hud elements on mobile devices to large (do not scale with screen width - use min())
+- [ ] - remove unused assets/fonts
 
 ## Development ideas
 
@@ -90,9 +98,10 @@ features :
 
 3. Performance
 
-- home animation on keyframes - plain css
+- Loading.tsx animation on keyframes - plain css
 - pack all assets on spritesheets
 - spritesheet whitelist filtering loading - (load sprites from spritesheets only the ones u need - not all of them)
+- audio packing
 
 4. Code/Project Structure
 
