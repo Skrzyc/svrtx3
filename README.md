@@ -1,11 +1,17 @@
 # fruit-knight-game
 
+![](./public/icons/icon-180.png)
+
 Simple web game with `pixi.js` - for recruitment purposes
 
 - developed from scratch
 - underdeveloped
 - unbalanced
 - with some bugs and issues
+
+---
+
+![](./public/opg/og-image.png)
 
 ---
 
@@ -53,6 +59,8 @@ features :
 **overall**
 
 - [ ] - readme better game description
+- [ ] - images
+- [ ] - unit tests
 
 **home**
 

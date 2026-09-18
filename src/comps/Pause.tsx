@@ -12,7 +12,7 @@ export const Pause = ({ gameMode }: { gameMode: LevelName }) => {
       <br></br>
       <div className="flex flex-row gap-2 justify-evenly items-center">
         <Button
-          name="TRY AGAIN"
+          name="RESTART"
           navLink={`${AppRoutes.loading}?${UrlParams.gameMode}=${gameMode}`}
           onClick={() => gameObject.reset()}
         />
