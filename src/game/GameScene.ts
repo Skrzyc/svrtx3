@@ -268,9 +268,7 @@ export default class GameScene {
     // update state
     this.state.paused = !isPaused;
 
-    console.log("xd-1");
     if (noEmit ?? false) return;
-    console.log("xd-2");
 
     // emit to HUD
     this.emitPauseToggle();
