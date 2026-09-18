@@ -38,6 +38,9 @@ features :
 
 ## DEV
 
+- run in dev `npm run dev`
+- run in prod mode `npm run build-preview` / `npm run start`
+
 **url params**
 
 - `gameMode` - `easy/medium/hard/hell`
